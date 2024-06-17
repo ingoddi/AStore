@@ -40,15 +40,29 @@ namespace AStore.Screens
         {
             var cartItems = _cartService.GetCartItems(_userId);
             CartItemsListView.ItemsSource = cartItems;
+
+            CartItemsListView.Items.Refresh();
         }
 
-        // Метод удаления товара из корзины
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             var item = button.DataContext as CartItem;
             _cartService.RemoveFromCart(_userId, item.ProductId);
             LoadCartItems();
+        }
+
+        private void UpdateQuantity_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        {
+          _cartService.CreateOrder(_userId);
+          var lastOrder = _cartService.GetLastOrderForUser(_userId);
+           _cartService.GenerateOrderPdf(lastOrder);
+          MessageBox.Show("Заказ успешно оформлен и сохранен в PDF!");
         }
     }
 }

@@ -17,9 +17,9 @@
               ItemsSource="{Binding}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Product Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Product Name" DisplayMemberBinding="{Binding Product.Name}"/>
                     <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
-                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}"/>
+                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Product.Price}"/>
                     <GridViewColumn Header="Actions">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -31,5 +31,6 @@
             </ListView.View>
         </ListView>
         <Button Name="UpdateQuantityButton" Content="Update Quantity" Click="UpdateQuantity_Click" Margin="10" VerticalAlignment="Bottom"/>
+        <Button Name="PlaceOrderButton" Content="Оформить заказ" Click="PlaceOrder_Click" Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

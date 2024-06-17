@@ -54,9 +54,20 @@ namespace AStore.Screens
 
         private void AddToCart_Click(object sender, RoutedEventArgs e)
         {
-            if (ProductGrid.SelectedItem is Product selectedProduct)
+            try
             {
-                _cartService.AddToCart(_userId, selectedProduct.ProductId, 1);
+                var button = sender as Button;
+                ProductDTO? product = button.DataContext as ProductDTO;
+
+                if (product != null)
+                {
+                    _cartService.AddToCart(_userId, product.ProductId, 1);
+                    MessageBox.Show($"Продукт {product.Name} добавлен в корзину.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
@@ -98,7 +109,13 @@ namespace AStore.Screens
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             var addProductWindow = new AddProductWindow(_productService);
+            addProductWindow.ProductAdded += AddProductWindow_ProductAdded;
             addProductWindow.ShowDialog();
+        }
+
+        private void AddProductWindow_ProductAdded(object sender, EventArgs e)
+        {
+            LoadProducts();
         }
     }
 }

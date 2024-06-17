@@ -52,6 +52,11 @@ namespace AStore.Services.TablesServices
             return product;
         }
 
+        public List<Category> GetAllCategories()
+        {
+            return _dbManager.Categories.ToList();
+        }
+
         public bool DeleteProduct(int productId)
         {
             var product = _dbManager.Products.Find(productId);
