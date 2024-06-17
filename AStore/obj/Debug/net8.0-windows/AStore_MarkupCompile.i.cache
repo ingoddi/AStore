@@ -1,0 +1,20 @@
+﻿AStore
+1.0.0.0
+
+winexe
+C#
+.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\AStore\AStore\obj\Debug\net8.0-windows\
+AStore
+none
+false
+TRACE;DEBUG;NET;NET8_0;NETCOREAPP
+C:\Users\IvanK\OneDrive\Рабочий стол\AStore\AStore\App.xaml
+51807230614
+
+15-886177248
+216-342505440
+Screens\CartScreen.xaml;Screens\Catalog.xaml;Screens\Common\AddProductWindow.xaml;Screens\LoginScreen.xaml;Screens\RegistrationScreen.xaml;
+
+False
+

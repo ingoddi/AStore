@@ -1,0 +1,22 @@
+﻿<Window x:Class="AStore.LoginScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AStore"
+        mc:Ignorable="d"
+        Title="Вход" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="369*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Content="Вход" FontSize="25" HorizontalAlignment="Left" Margin="319,24,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Content="Войти" FontSize="20" HorizontalAlignment="Left" Margin="86,265,0,0" VerticalAlignment="Top" Height="34" Width="200" Grid.Column="1" Background="Green" BorderThickness="0" Click="Button_Click_1"/>
+        <Button Content="Регистрация" FontSize="20" HorizontalAlignment="Left" Margin="86,316,0,0" VerticalAlignment="Top" Height="35" Width="200" Grid.Column="1" Background="Blue" BorderThickness="0" Click="Button_Click"/>
+        <TextBox Name="username" FontSize="14" HorizontalAlignment="Left" Margin="86,138,0,0" TextWrapping="Wrap" Text="Имя пользователя" VerticalAlignment="Top" Width="200" Height="25" Grid.Column="1"/>
+        <PasswordBox Name="password" FontSize="14" HorizontalAlignment="Left" Margin="86,168,0,0" VerticalAlignment="Top" Width="200" Height="25" Grid.Column="1"/>
+        <CheckBox Name="loginAsManager" Content="Войти как менеджер" FontSize="14" HorizontalAlignment="Left" Margin="86,228,0,0" VerticalAlignment="Top" Grid.Column="1" Height="18" Width="200"/>
+    </Grid>
+</Window>
