@@ -1,3 +1,12 @@
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore.csproj.AssemblyReference.cache
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\CartScreen.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Catalog.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Common\AddProductWindow.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\LoginScreen.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\RegistrationScreen.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore_MarkupCompile.cache
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore_MarkupCompile.lref
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\Models\astore.db
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\AssemblyInfo.cs
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\AStore.exe
@@ -22,6 +31,7 @@ C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-w
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\Microsoft.Extensions.Options.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
+C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\QRCoder.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\SQLitePCLRaw.batteries_v2.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\SQLitePCLRaw.core.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\SQLitePCLRaw.provider.e_sqlite3.dll
@@ -45,15 +55,6 @@ C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-w
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\bin\Debug\net8.0-windows\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore.csproj.AssemblyReference.cache
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\CartScreen.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Catalog.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Common\AddProductWindow.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\LoginScreen.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\RegistrationScreen.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\App.g.cs
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore_MarkupCompile.cache
-C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\AStore_MarkupCompile.lref
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\CartScreen.baml
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Catalog.baml
 C:\Users\IvanK\OneDrive\Рабочий стол\Astore\AStore\obj\Debug\net8.0-windows\Screens\Common\AddProductWindow.baml

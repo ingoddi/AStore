@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+    <PackageReference Include="QRCoder" Version="1.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +35,10 @@
     <None Update="Models\astore.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="result\" />
   </ItemGroup>
 
   

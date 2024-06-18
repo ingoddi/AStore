@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PdfDocument = iTextSharp.text.Document;
+using QRCoder;
 using iTextSharp.text;
+using System.Drawing;
 
 namespace AStore.Services.TablesServices
 {
@@ -16,6 +18,8 @@ namespace AStore.Services.TablesServices
     {
 
         private DatabaseManager _dbManager;
+        private static Dictionary<int, List<CartItem>> _userCarts = new Dictionary<int, List<CartItem>>();
+        private static Dictionary<int, List<Order>> _userOrders = new Dictionary<int, List<Order>>();
 
         public CartService(DatabaseManager dbManager)
         {
@@ -24,135 +28,140 @@ namespace AStore.Services.TablesServices
 
         public List<CartItem> GetCartItems(int userId)
         {
-            return _dbManager.CartItems.Where(ci => ci.Cart.User.UserId == userId)
-                                       .Include(ci => ci.Product)
-                                       .ToList();
+            return _userCarts.ContainsKey(userId) ? _userCarts[userId] : new List<CartItem>();
         }
 
         public void AddToCart(int userId, int productId, int quantity)
         {
-            Console.WriteLine($"AddToCart start: userId={userId}, productId={productId}, quantity={quantity}");
-            try
+            if (!_userCarts.ContainsKey(userId))
             {
-                var cart = _dbManager.Carts.Include(c => c.CartItems)
-                                           .SingleOrDefault(c => c.UserId == userId); // Изменено с SingleOrDefaultAsync на SingleOrDefault
+                _userCarts[userId] = new List<CartItem>();
+            }
 
-                if (cart == null)
+            var cartItem = _userCarts[userId].FirstOrDefault(ci => ci.ProductId == productId);
+            if (cartItem != null)
+            {
+                cartItem.Quantity += quantity;
+            }
+            else
+            {
+                var product = _dbManager.Products.SingleOrDefault(p => p.ProductId == productId);
+                if (product != null)
                 {
-                    Console.WriteLine("Cart not found, creating new one.");
-                    cart = new Cart { UserId = userId };
-                    _dbManager.Carts.Add(cart);
-                    _dbManager.SaveChanges(); // Изменено с SaveChangesAsync на SaveChanges
-                }
-
-                var cartItem = cart.CartItems.SingleOrDefault(ci => ci.ProductId == productId);
-                if (cartItem != null)
-                {
-                    Console.WriteLine("Product already in cart, updating quantity.");
-                    cartItem.Quantity += quantity;
-                }
-                else
-                {
-                    Console.WriteLine("Adding new product to cart.");
-                    cartItem = new CartItem
+                    _userCarts[userId].Add(new CartItem
                     {
                         ProductId = productId,
                         Quantity = quantity,
-                        CartId = cart.CartId
-                    };
-                    cart.CartItems.Add(cartItem);
+                        Product = product
+                    });
                 }
-
-                _dbManager.SaveChanges(); // Изменено с SaveChangesAsync на SaveChanges
-                Console.WriteLine("AddToCart completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"AddToCart error: {ex.Message}");
             }
         }
 
         public void RemoveFromCart(int userId, int productId)
         {
-            var cartItem = _dbManager.CartItems
-                                     .Include(ci => ci.Cart)
-                                     .FirstOrDefault(ci => ci.Cart.User.UserId == userId && ci.ProductId == productId);
-
-            if (cartItem != null)
+            if (_userCarts.ContainsKey(userId))
             {
-                _dbManager.CartItems.Remove(cartItem);
-                _dbManager.SaveChanges();
+                var cartItem = _userCarts[userId].FirstOrDefault(ci => ci.ProductId == productId);
+                if (cartItem != null)
+                {
+                    _userCarts[userId].Remove(cartItem);
+                }
             }
         }
 
-
         public void CreateOrder(int userId)
         {
-            Console.WriteLine($"CreateOrder start: userId={userId}");
-            try
+            if (!_userCarts.ContainsKey(userId) || !_userCarts[userId].Any())
             {
-                var cart = _dbManager.Carts.Include(c => c.CartItems)
-                                           .ThenInclude(ci => ci.Product)
-                                           .SingleOrDefault(c => c.UserId == userId); 
-
-                if (cart == null || cart.CartItems.Count == 0)
-                {
-                    Console.WriteLine("Cart is empty or not found. Order creation aborted.");
-                    return;
-                }
-
-                var order = new Order
-                {
-                    UserId = userId,
-                    CreatedAt = DateTime.Now.ToString(),
-                    TotalPrice = Convert.ToInt32(cart.CartItems.Sum(item => item.Quantity * item.Product.Price ?? 0m)),
-                    StatusId = 1
-                };
-
-                foreach (var item in cart.CartItems)
-                {
-                    order.OrderItems.Add(new OrderItems
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        Price = item.Product.Price ?? 0
-                    });
-                }
-
-                Console.WriteLine($"Creating order for userId={userId}.");
-                _dbManager.Orders.Add(order); 
-                _dbManager.SaveChanges(); 
-
-                _dbManager.CartItems.RemoveRange(cart.CartItems);
-                _dbManager.SaveChanges(); 
-                Console.WriteLine("Order created successfully.");
+                Console.WriteLine("Cart is empty. Order creation aborted.");
+                return;
             }
-            catch (Exception ex)
+
+            var cartItems = _userCarts[userId];
+            var totalPrice = cartItems.Sum(item => item.Quantity * (item.Product?.Price ?? 0));
+
+            var order = new Order
             {
-                Console.WriteLine($"CreateOrder error: {ex.Message}");
+                UserId = userId,
+                CreatedAt = DateTime.Now.ToString(),
+                TotalPrice = Convert.ToInt32(totalPrice),
+                StatusId = 1,
+                OrderItems = cartItems.Select(ci => new OrderItems
+                {
+                    ProductId = ci.ProductId,
+                    Quantity = ci.Quantity,
+                    Price = ci.Product?.Price ?? 0
+                }).ToList()
+            };
+
+            if (!_userOrders.ContainsKey(userId))
+            {
+                _userOrders[userId] = new List<Order>();
             }
+            _userOrders[userId].Add(order);
+
+            GenerateOrderQRCode(order);
+            GenerateOrderPdf(order);
+
+            _userCarts[userId].Clear(); 
+
+            Console.WriteLine("Order created successfully.");
         }
 
         public Order GetLastOrderForUser(int userId)
         {
-            return _dbManager.Orders
-                             .Where(o => o.UserId == userId)
-                             .OrderByDescending(o => o.CreatedAt) 
-                             .FirstOrDefault();
+            if (_userOrders.ContainsKey(userId) && _userOrders[userId].Any())
+            {
+                return _userOrders[userId].LastOrDefault();
+            }
+
+            return null; 
+        }
+
+        public decimal GetTotalCartPrice(int userId)
+        {
+            if (!_userCarts.ContainsKey(userId) || !_userCarts[userId].Any())
+            {
+                return 0; 
+            }
+
+            decimal total = 0;
+            foreach (var item in _userCarts[userId])
+            {
+                var productPrice = _dbManager.Products.SingleOrDefault(p => p.ProductId == item.ProductId)?.Price ?? 0;
+                total += item.Quantity * productPrice;
+            }
+
+            return total;
+        }
+
+        public List<Order> GetOrders(int userId)
+        {
+            if (_userOrders.ContainsKey(userId))
+            {
+                return _userOrders[userId];
+            }
+            return new List<Order>();
         }
 
         public void GenerateOrderPdf(Order order)
         {
             if (order == null || order.OrderItems == null)
             {
-                throw new ArgumentNullException(nameof(order), "Order or OrderItems is null.");
+                throw new ArgumentNullException(nameof(order), "Order or Order Items is null.");
+            }
+
+            string directoryPath = "result";
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
             }
 
             string fileName = $"Order_{order.OrderId}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
-            string filePath = Path.Combine(Environment.CurrentDirectory, fileName);
+            string filePath = Path.Combine(directoryPath, fileName);
 
-            PdfDocument document = new PdfDocument();
-            try
+            using (PdfDocument document = new PdfDocument())
             {
                 PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
                 document.Open();
@@ -163,19 +172,37 @@ namespace AStore.Services.TablesServices
 
                 foreach (var item in order.OrderItems)
                 {
-                    if (item.Product == null)
-                    {
-                        throw new ArgumentException("Product is null in one of the OrderItems", nameof(order));
-                    }
-                    document.Add(new Paragraph($"{item.Product.Name}, Количество: {item.Quantity}, Цена: {item.Price}"));
+                    var productName = item.Product?.Name ?? "Название неизвестно";
+                    document.Add(new Paragraph($"{productName}, Количество: {item.Quantity}, Цена: {item.Price}"));
                 }
 
                 document.Add(new Paragraph($"Общая цена: {order.TotalPrice}"));
-
             }
-            finally
+        }
+
+        public void GenerateOrderQRCode(Order order)
+        {
+            if (order == null)
             {
-                if (document != null) document.Close();
+                throw new ArgumentNullException(nameof(order), "Order is null.");
+            }
+
+            string directoryPath = "result";
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            string orderUrl = $"http://example.com/order/{order.OrderId}";
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(orderUrl, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+
+            using (Bitmap qrCodeImage = qrCode.GetGraphic(20))
+            {
+                string filePath = Path.Combine(directoryPath, $"Order_{order.OrderId}_QR.png");
+                qrCodeImage.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                Console.WriteLine($"QR-код для заказа {order.OrderId} сохранён в файл: {filePath}");
             }
         }
     }

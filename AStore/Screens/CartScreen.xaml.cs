@@ -40,8 +40,10 @@ namespace AStore.Screens
         {
             var cartItems = _cartService.GetCartItems(_userId);
             CartItemsListView.ItemsSource = cartItems;
-
             CartItemsListView.Items.Refresh();
+
+            var totalPrice = _cartService.GetTotalCartPrice(_userId);
+            TotalPriceLabel.Content = $"Общая цена: {totalPrice}";
         }
 
         private void Remove_Click(object sender, RoutedEventArgs e)
@@ -50,11 +52,6 @@ namespace AStore.Screens
             var item = button.DataContext as CartItem;
             _cartService.RemoveFromCart(_userId, item.ProductId);
             LoadCartItems();
-        }
-
-        private void UpdateQuantity_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,10 +46,20 @@ namespace AStore.Screens
                 ProductGrid.IsReadOnly = true;
             }
         }
-        
+
+
         private void LoadProducts()
         {
             var products = _productService.GetAllProducts();
+
+            foreach (var product in products)
+            {
+                if (!string.IsNullOrEmpty(product.ImagePath))
+                {
+                    product.ImagePath = System.IO.Path.Combine(Environment.CurrentDirectory, product.ImagePath);
+                }
+            }
+
             ProductGrid.ItemsSource = products;
         }
 
